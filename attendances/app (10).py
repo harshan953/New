@@ -100,9 +100,10 @@ elif menu == "👥 Employees":
                 st.success("✅ Employee added successfully!")
 
                 # Clear form inputs
-                st.session_state["add_emp_id"] = ""
-                st.session_state["add_emp_name"] = ""
-                st.session_state["add_emp_salary"] = 0.0
+                st.session_state.setdefault("add_emp_id", "")
+                st.session_state.setdefault("add_emp_name", "")
+                st.session_state.setdefault("add_emp_salary", 0.0)
+
             else:
                 st.warning("⚠️ Employee ID already exists!")
 
