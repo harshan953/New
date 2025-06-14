@@ -188,20 +188,36 @@ elif menu == "📊 Dashboard":
             ]])
 
         # --- Daily View ---
-        with tab2:
-            st.markdown("### 📅 Daily Attendance Records")
-            selected_month = st.selectbox("Filter Month", sorted(attendance["Date"].str[:7].unique(), reverse=True), key="daily_month")
+with tab2:
+    st.markdown("### 📅 Daily Attendance Records")
 
-            name_options = ["All"] + sorted(attendance["Name"].unique())
-            selected_name = st.selectbox("Filter by Employee Name", name_options, key="daily_name")
+    # Month filter
+    selected_month = st.selectbox("📅 Filter Month", sorted(attendance["Date"].str[:7].unique(), reverse=True), key="daily_month")
 
-            daily_att = attendance[attendance["Date"].str.startswith(selected_month)]
+    # Two filters side-by-side
+    col1, col2 = st.columns(2)
 
-            if selected_name != "All":
-                daily_att = daily_att[daily_att["Name"] == selected_name]
+    with col1:
+        name_options = ["All"] + sorted(attendance["Name"].unique())
+        selected_name = st.selectbox("👤 Filter by Employee Name", name_options, key="daily_name")
 
-            daily_summary = daily_att.sort_values(by=["Date", "Name"])
-            st.dataframe(daily_summary, use_container_width=True)
+    with col2:
+        status_options = ["All"] + sorted(attendance["Status"].unique())
+        selected_status = st.selectbox("📌 Filter by Status", status_options, key="daily_status")
+
+    # Filter the data
+    daily_att = attendance[attendance["Date"].str.startswith(selected_month)]
+
+    if selected_name != "All":
+        daily_att = daily_att[daily_att["Name"] == selected_name]
+
+    if selected_status != "All":
+        daily_att = daily_att[daily_att["Status"] == selected_status]
+
+    # Sort and show
+    daily_summary = daily_att.sort_values(by=["Date", "Name"])
+    st.dataframe(daily_summary, use_container_width=True)
+
 
 #Salary Report
 elif menu == "💰 Salary Report":
